@@ -24,11 +24,11 @@ else:
 version_string = '0.5.0'
 
 setup_kwargs = {
-    'name': 'gittle',
-    'description': 'A high level pure python git implementation',
+    'name': 'gittle3',
+    'description': 'A high level pure python git implementation for Python 3',
     'keywords': 'git dulwich pure python gittle',
     'version': version_string,
-    'url': 'https://github.com/FriendCode/gittle',
+    'url': 'https://github.com/powellc/gittle',
     'license': 'MIT',
     'author': "Aaron O'Mullan",
     'author_email': 'aaron@friendco.de',
