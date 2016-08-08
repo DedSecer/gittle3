@@ -14,7 +14,7 @@ package:
 	python setup.py build sdist bdist_wheel
 
 distribute:
-	twine upload -s dist/gittle-$(v)*
+	twine upload -s dist/gittle3-$(v)*
 
 release:
 	$(MAKE) tag-release
