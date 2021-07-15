@@ -72,7 +72,7 @@ class Gittle(object):
     """
     DEFAULT_COMMIT = 'HEAD'
     DEFAULT_BRANCH = 'master'
-    DEFAULT_REMOTE = 'origin'
+    DEFAULT_REMOTE = b'origin'
     DEFAULT_MESSAGE = '**No Message**'
     DEFAULT_USER_INFO = {
         'name': None,
@@ -391,17 +391,17 @@ class Gittle(object):
 
 
     def _setup_fetched_refs(self, refs, origin, bare):
-        remote_tags = utils.git.subrefs(refs, 'refs/tags')
-        remote_heads = utils.git.subrefs(refs, 'refs/heads')
+        remote_tags = utils.git.subrefs(refs, b'refs/tags')
+        remote_heads = utils.git.subrefs(refs, b'refs/heads')
 
         # Filter refs
         clean_remote_tags = utils.git.clean_refs(remote_tags)
         clean_remote_heads = utils.git.clean_refs(remote_heads)
 
         # Base of new refs
-        heads_base = 'refs/remotes/' + origin
+        heads_base = b'refs/remotes/' + origin
         if bare:
-            heads_base = 'refs/heads'
+            heads_base = b'refs/heads'
 
         # Import branches
         self.import_refs(
@@ -411,7 +411,7 @@ class Gittle(object):
 
         # Import tags
         self.import_refs(
-            'refs/tags',
+            b'refs/tags',
             clean_remote_tags
         )
 
@@ -868,7 +868,7 @@ class Gittle(object):
     def _commit_tree(self, commit_sha):
         """Return the tree object for a given commit
         """
-        return self[commit_sha].tree
+        return self[commit_sha.decode()].tree
 
     def diff(self, commit_sha, compare_to=None, diff_type=None, filter_binary=True):
         diff_type = diff_type or self.DEFAULT_DIFF_TYPE
@@ -1272,7 +1272,7 @@ class Gittle(object):
 
     def __getitem__(self, key):
         try:
-            sha = self._parse_reference(key)
+            sha = self._parse_reference(key).encode()
         except:
             raise KeyError(key)
         return self.repo[sha]

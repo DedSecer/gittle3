@@ -263,5 +263,5 @@ def clean_refs(refs):
     return {
         ref: sha
         for ref, sha in list(refs.items())
-        if not ref.endswith('^{}')
+        if not ref.endswith(b'^{}')
     }
