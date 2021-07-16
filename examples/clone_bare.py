@@ -1,4 +1,4 @@
-from gittle import Gittle
+from gittle3 import Gittle
 
 repo_path = '/tmp/gittle_bare'
 repo_url = 'git://github.com/AaronO/dulwich.git'

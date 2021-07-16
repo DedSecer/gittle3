@@ -7,7 +7,7 @@
 # License, Version 2.0.  See the COPYING file for further details.
 
 import os
-from gittle import Gittle
+from gittle3 import Gittle
 from tempfile import mkdtemp
 
 path = mkdtemp()

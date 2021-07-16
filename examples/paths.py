@@ -7,7 +7,7 @@
 import os
 from functools import partial
 
-from gittle import Gittle
+from gittle3 import Gittle
 
 BASE_DIR = '/Users/aaron/git/'
 absbase = partial(os.path.join, BASE_DIR)

@@ -30,9 +30,9 @@ from dulwich.errors import NotGitRepository
 import funky
 
 # Local imports
-from gittle.auth import GittleAuth
-from gittle.exceptions import InvalidRemoteUrl
-from gittle import utils
+from gittle3.auth import GittleAuth
+from gittle3.exceptions import InvalidRemoteUrl
+from gittle3 import utils
 
 
 # Exports

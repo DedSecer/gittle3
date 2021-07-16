@@ -1,4 +1,4 @@
-from gittle import Gittle
+from gittle3 import Gittle
 
 repo = Gittle('.')
 
