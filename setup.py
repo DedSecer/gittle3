@@ -24,7 +24,7 @@ else:
 version_string = '0.5.0'
 
 setup_kwargs = {
-    'name': 'gittle',
+    'name': 'gittle3',
     'description': 'A high level pure python git implementation',
     'keywords': 'git dulwich pure python gittle',
     'version': version_string,
@@ -37,7 +37,7 @@ setup_kwargs = {
     It's pure python (no dependency on the ``git`` binary) and has no other dependencies besides
     the python stdlib, dulwich and paramiko (optional).
     """,
-    'packages': ['gittle', 'gittle.utils'],
+    'packages': ['gittle3', 'gittle3.utils'],
     'install_requires': [
     # PyPI
     'paramiko>=1.10.0',
