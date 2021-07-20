@@ -41,3 +41,6 @@ nosetests.xml
 # gvim
 .*.swp
 *.bak
+
+# vscode
+.vscode/*
