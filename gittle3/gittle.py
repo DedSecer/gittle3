@@ -70,10 +70,10 @@ def bare_only(method):
 class Gittle(object):
     """All paths used in Gittle external methods must be paths relative to the git repository
     """
-    DEFAULT_COMMIT = 'HEAD'
-    DEFAULT_BRANCH = 'master'
+    DEFAULT_COMMIT = b'HEAD'
+    DEFAULT_BRANCH = b'master'
     DEFAULT_REMOTE = b'origin'
-    DEFAULT_MESSAGE = '**No Message**'
+    DEFAULT_MESSAGE = b'**No Message**'
     DEFAULT_USER_INFO = {
         'name': None,
         'email': None,
@@ -92,9 +92,9 @@ class Gittle(object):
     ]
 
     # References
-    REFS_BRANCHES = 'refs/heads/'
-    REFS_REMOTES = 'refs/remotes/'
-    REFS_TAGS = 'refs/tags/'
+    REFS_BRANCHES = b'refs/heads/'
+    REFS_REMOTES = b'refs/remotes/'
+    REFS_TAGS = b'refs/tags/'
 
     # Name pattern truths
     # Used for detecting if files are :
@@ -155,7 +155,7 @@ class Gittle(object):
         return self._report_activity(*args, **kwargs)
 
     def _format_author(self, name, email):
-        return "%s <%s>" % (name, email)
+        return str.encode("%s <%s>" % (name, email))
 
     def _format_userinfo(self, userinfo):
         name = userinfo.get('name')
@@ -165,7 +165,7 @@ class Gittle(object):
         return None
 
     def _format_ref(self, base, extra):
-        return ''.join([base, extra])
+        return b''.join([base, extra])
 
     def _format_ref_branch(self, branch_name):
         return self._format_ref(self.REFS_BRANCHES, branch_name)
@@ -212,7 +212,7 @@ class Gittle(object):
         """
         Very simple, basic walker
         """
-        ref = ref or 'HEAD'
+        ref = ref or b'HEAD'
         sha = self._commit_sha(ref)
         for entry in self.repo.get_walker(sha):
             yield entry.commit
@@ -241,7 +241,7 @@ class Gittle(object):
     @property
     def commit_count(self):
         try:
-            return len(self.ref_walker())
+            return len(list(self.ref_walker()))
         except KeyError:
             return 0
 
@@ -481,7 +481,7 @@ class Gittle(object):
             self.repo.stage(modified_files)
 
         # Messages
-        message = message or self.DEFAULT_MESSAGE
+        message = message.encode() or self.DEFAULT_MESSAGE
         author_msg = self._format_userinfo(author)
         committer_msg = self._format_userinfo(committer)
 
@@ -489,7 +489,7 @@ class Gittle(object):
             message=message,
             author=author_msg,
             committer=committer_msg,
-            encoding='UTF-8',
+            encoding=b'UTF-8',
             tree=tree,
             *args, **kwargs
         )
@@ -580,7 +580,7 @@ class Gittle(object):
         with open(abspath, 'rb') as git_file:
             data = git_file.read()
             s = sha1()
-            s.update("blob %u\0" % len(data))
+            s.update(b"blob %u\0" % len(data))
             s.update(data)
         return (s.hexdigest(), os.stat(abspath).st_mode)
 
@@ -669,10 +669,10 @@ class Gittle(object):
         return self._changed_entries_by_pattern(self.PATTERN_ADDED) - self.ignored_files
 
     @property
-    @funky.transform(set)
+    #@funky.transform(set)
     def modified_files(self):
         modified_files = self._changed_entries_by_pattern(self.PATTERN_MODIFIED) - self.ignored_files
-        return modified_files
+        return list(modified_files)
 
     @property
     @funky.transform(set)
@@ -795,7 +795,7 @@ class Gittle(object):
         """
         if utils.git.is_sha(commit_obj):
             return commit_obj
-        elif isinstance(commit_obj, str):
+        elif isinstance(commit_obj, bytes):
             # Can't use self[commit_obj] to avoid infinite recursion
             commit_obj = self.repo[self.dwim_reference(commit_obj)]
         return commit_obj.id
@@ -806,12 +806,12 @@ class Gittle(object):
 
         # Formats of refs we want to try in order
         formats = [
-            "%s",
-            "refs/%s",
-            "refs/tags/%s",
-            "refs/heads/%s",
-            "refs/remotes/%s",
-            "refs/remotes/%s/HEAD",
+            b"%s",
+            b"refs/%s",
+            b"refs/tags/%s",
+            b"refs/heads/%s",
+            b"refs/remotes/%s",
+            b"refs/remotes/%s/HEAD",
         ]
 
         for f in formats:
@@ -858,8 +858,8 @@ class Gittle(object):
 
     def _parse_reference(self, ref_string):
         # COMMIT_REF~x
-        if '~' in ref_string:
-            ref, count = ref_string.split('~')
+        if b'~' in ref_string:
+            ref, count = ref_string.split(b'~')
             count = int(count)
             commit_sha = self._commit_sha(ref)
             return self.get_previous_commit(commit_sha, count)
@@ -868,7 +868,7 @@ class Gittle(object):
     def _commit_tree(self, commit_sha):
         """Return the tree object for a given commit
         """
-        return self[commit_sha.decode()].tree
+        return self[commit_sha].tree
 
     def diff(self, commit_sha, compare_to=None, diff_type=None, filter_binary=True):
         diff_type = diff_type or self.DEFAULT_DIFF_TYPE
@@ -1036,7 +1036,7 @@ class Gittle(object):
     def active_branch(self):
         """Returns the name of the active branch, or None, if HEAD is detached
         """
-        x = self.repo.refs.read_ref('HEAD')
+        x = self.repo.refs.read_ref(b'HEAD')
         if not x.startswith(SYMREF):
             return None
         else:
@@ -1272,7 +1272,7 @@ class Gittle(object):
 
     def __getitem__(self, key):
         try:
-            sha = self._parse_reference(key).encode()
+            sha = self._parse_reference(key)
         except:
             raise KeyError(key)
         return self.repo[sha]

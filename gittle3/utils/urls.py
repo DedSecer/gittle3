@@ -8,7 +8,7 @@
 try:
     from urllib.parse import urlparse
 except ImportError:
-    from urllib.parse import urlparse
+    from urlparse import urlparse
 
 # Local imports
 from funky import first_true
